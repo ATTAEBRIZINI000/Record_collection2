@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+  alpine: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server
+    env_file:
+      - .env
+    restart: always
+    working_dir: /var/www/html/
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - symfony
+    depends_on:
+      - database
+    ports:
+      - 9000:9000
+
+  nginx:
+    image: nginx:alpine 
+    container_name: symfony_nginx
+    restart: unless-stopped
+    ports:
+      - 8090:80
+    volumes:
+      - .:/var/www/html/
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - alpine
+    networks:
+      - symfony
+
+  database:
+    image: mariadb:latest
+    container_name: symfony_database
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_: root
+      MYSQL_DATABASE: records
+    networks:
+      - symfony
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+  phpmyadmin: 
+    image: phpmyadmin/phpmyadmin
+    container_name: symfony_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - 8181:80  
+    depends_on:
+      - database
+    networks:
+      - symfony
+
+
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+
+
+networks:
+  symfony:
+    driver: bridge
+
+volumes:
+  db-data:
+
+

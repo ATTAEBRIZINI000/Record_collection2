@@ -1,0 +1,63 @@
+# Symfony specific
+/var/
+/vendor/
+/public/bundles/
+/public/uploads/
+/public/media/
+/translations/
+/node_modules/
+/.DS_Store
+
+# Logs and cache
+*.log
+*.cache
+
+# Environment variables
+
+.env.local
+.env.*.local
+.env.test.local
+.env.php
+
+# Security files
+jwt/private.pem
+jwt/public.pem
+
+# PHPUnit
+/phpunit.xml
+/phpunit.xml.dist
+
+# IDEs and text editors
+/.idea/
+/*.iml
+*.sublime-project
+*.sublime-workspace
+*.vscode
+/.project
+/.buildpath
+/.settings/
+/nbproject
+
+# Composer
+composer.phar
+
+# User-specific files
+*.swp
+*~
+
+# Symfony Encore
+/build/
+/public/build/
+
+# Other
+/.phpunit.result.cache
+/.php_cs.cache
+/phpstan/cache/
+
+# Node.js
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Symfony lock files
+.symfony.lock
